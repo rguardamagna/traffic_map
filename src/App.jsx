@@ -8,22 +8,11 @@ import './App.css'
 const url = 'https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/intensitat-transit-trams-intensidad-trafico-tramos/records?limit=-1'
 
 function App() {
-  const [data, setData] = useState(null)
   
-  useEffect(() => {
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => setData(data));
-  }, [])
-
-  //<MapView/>
-
   return (
     <>
       <div> 
-        {data?.map((results) => (
-          results
-        ))} 
+        <MapView/> 
       </div>
     </>
   )
