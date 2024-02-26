@@ -1,17 +1,24 @@
-import { useFetch } from "./useFetch"
+import { useFetch } from "./useFetch";
 
-const url = 'https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/intensitat-transit-trams-intensidad-trafico-tramos/records?limit=-1    '
 
-export function polylineCreator() {
+const urls =['https://geoportal.valencia.es/server/rest/services/OPENDATA/Trafico/MapServer/192/query?where=idtramo%3E%3D0&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&historicMoment=&returnDistinctValues=false&resultOffset=&resultRecordCount=&returnExtentOnly=false&datumTransformation=&parameterValues=&rangeValues=&quantizationParameters=&featureEncoding=esriDefault&f=geojson']
+
+
+export function usePolylineCreator() {
     
-    const {data} = useFetch(url)
     let polylineToDraw=[]
+    
+    const {data} = useFetch(urls)
+    
     if (data != null)    
         {
-            data.results.forEach(element => {
+            data.forEach(element => {
                 let newFeature = {
-                    'lines':element.geo_shape.geometry.coordinates,
-                    'status':element.estado
+                    'lines':element.geometry.coordinates,
+                    'status':element.properties.estado,
+                    'id':element.properties.idtramo,
+                    'address': element.properties.denominacion,
+                    'predictions':4
                 }
                 polylineToDraw.push(newFeature)
             

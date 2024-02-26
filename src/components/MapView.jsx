@@ -1,73 +1,73 @@
 import React from "react";
-import { MapContainer, TileLayer, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Polyline, Tooltip} from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
-import '../styles/map.css'
+import '../styles/map.css';
 
-import { polylineCreator } from '../trafficStatus'
-import { invertirCoordenadas } from "../utils/utils";
-
+import { usePolylineCreator } from '../trafficStatus';
+//import { invertirCoordenadas } from "../utils/utils";
+import {classifyStatus, realizarPrediccion} from "../utils/utils";
 
 
 const MapView = () => {
     
+    // Estado de trafico actual
     let trafficFluido = []
-    let trafficDenso,trafficCongestionado,trafficCortado,trafficSinDatos = []
+    let trafficDenso =[]
+    let trafficCongestionado = []
+    let trafficCortado =[]
+    let trafficSinDatos =[]
+
+    //Estado de tráfico predicción
+    let predictionFluido = []
+    let predictionDenso =[]
+    let predictionCongestionado = []
+    let predictionCortado =[]
+    let predictionSinDatos =[]
     
-    let polyline = polylineCreator()  
- /*   
-    let polylineToDraw = []
+    let polyline = usePolylineCreator()
+    
     
     polyline.forEach(element => {
-        
-        let auxlineToDraw = []
-        
-        element.lines.forEach(coords => {
-            
-            auxlineToDraw.push(invertirCoordenadas(coords))             
-        });
-        polylineToDraw.push(auxlineToDraw)       
-    });
-*/
+        // Asignar estado actual a cada array
+        classifyStatus(element,trafficFluido,trafficDenso,trafficCongestionado,trafficCortado,trafficSinDatos)
+    })
+
+    console.log(polyline[0])
 
     polyline.forEach(element => {
+        // Asignar estado actual a cada array
+        classifyStatus(element,predictionFluido,predictionDenso,predictionCongestionado,predictionCortado,predictionSinDatos)
+        console.log(polyline.prediction)
+        element.prediction=realizarPrediccion(element)
         
-        let auxlineToDraw = []
-        
-        switch (element.status) {
-            case "0":
-                element.lines.forEach(coords => {            
-                    auxlineToDraw.push(invertirCoordenadas(coords))       
-                });
-                console.log(auxlineToDraw)
-                let trafficLine = {
-                    'lines': auxlineToDraw.pop(),
-                    'status': element.status
-                };
-                trafficFluido.push(trafficLine)
-                break;
-            case "1":
-                break;
-            case "2":
-                break;            
-            case "3":
-                break;
-            case "4":
-                break;
-            case "5":
-                break;
-
-            default:
-                break;
-        }                
-    });
-    console.log(trafficFluido)
-    const limeOptions = { color: 'yellow' }
-    //<Polyline pathOptions={limeOptions} positions={polylineToDraw} />
+    })
+    
+    const limeOptions = { color: 'lime' }    
+    const orangeOptions = { color: 'orange' }
+    const redOptions = { color: 'red' }
+    const blackOptions = { color: 'black' }
+    const grayOptions = { color: 'gray' }
+    
     return (
         <div>
             <MapContainer center={[39.46746287691412,-0.3778836267835896]} zoom={13} className="mapa">
                 <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                <Polyline pathOptions={limeOptions} positions={trafficFluido} >
+                    <Tooltip sticky>Estado del tráfico: Fluido</Tooltip>
+                </Polyline>                  
+                <Polyline pathOptions={orangeOptions} positions={trafficDenso}>
+                    <Tooltip sticky>Estado del tráfico: Denso</Tooltip>
+                </Polyline>
+                <Polyline pathOptions={redOptions} positions={trafficCongestionado}>
+                    <Tooltip sticky>Estado del tráfico: Congestionado</Tooltip>
+                </Polyline>
+                <Polyline pathOptions={blackOptions} positions={trafficCortado}>
+                    <Tooltip sticky>Estado del tráfico: Cortado</Tooltip>    
+                </Polyline>
+                <Polyline pathOptions={grayOptions} positions={trafficSinDatos}>
+                    <Tooltip sticky>Estado del tráfico: Sin datos</Tooltip>
+                </Polyline>
             </MapContainer>            
         </div>
     )
