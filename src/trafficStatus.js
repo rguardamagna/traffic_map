@@ -18,10 +18,8 @@ export function usePolylineCreator() {
                     'status':element.properties.estado,
                     'id':element.properties.idtramo,
                     'address': element.properties.denominacion,
-                    'predictions':4
                 }
                 polylineToDraw.push(newFeature)
-            
             });          
 
             return polylineToDraw

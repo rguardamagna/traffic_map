@@ -13,15 +13,14 @@ export function invertirCoordenadas(element)
 import axios from 'axios';
 
 export async function realizarPrediccion(trafficData) {
+  try {
     const apiUrl = 'http://127.0.0.1:5000/predict';
-
-    axios.post(apiUrl, { data: trafficData })
-    .then(response => {
-        console.log('Resultado de la predicción:', response.data);
-    })
-    .catch(error => {
-        console.error('Error al realizar la solicitud:', error.message);
-    });
+    const response = await axios.post(apiUrl, { data: trafficData });
+    return response.data;
+  } catch (error) {
+    console.error('Error al realizar la solicitud:', error.message);
+    throw error;
+  }
 }
 
 
@@ -80,6 +79,50 @@ export async function classifyStatus(json_data,fluido,denso,congestionado,cortad
           cortado.push(auxLineToDraw)
           break;
       
+      default:
+        json_data.lines.forEach(coords => {
+              auxLineToDraw.push(invertirCoordenadas(coords))
+          });                
+          sinDatos.push(auxLineToDraw)
+          break;            
+  }
+
+}
+
+export async function classifyPrediction(json_data,fluido,denso,congestionado,cortado,sinDatos) {
+        
+  let auxLineToDraw=[]
+  switch (json_data.prediction) {
+      case 1:
+          json_data.lines.forEach(coords => {
+              auxLineToDraw.push(invertirCoordenadas(coords))
+          });                
+          fluido.push(auxLineToDraw)
+          break;
+      case 2:
+          json_data.lines.forEach(coords => {
+              auxLineToDraw.push(invertirCoordenadas(coords))
+          });                
+          fluido.push(auxLineToDraw)
+          break;
+      case 3:
+          json_data.lines.forEach(coords => {
+              auxLineToDraw.push(invertirCoordenadas(coords))
+          });                
+          denso.push(auxLineToDraw)
+          break;            
+      case 4:
+          json_data.lines.forEach(coords => {
+              auxLineToDraw.push(invertirCoordenadas(coords))
+          });                
+          congestionado.push(auxLineToDraw)
+          break;           
+      case 5:
+          json_data.lines.forEach(coords => {
+              auxLineToDraw.push(invertirCoordenadas(coords))
+          });                
+          congestionado.push(auxLineToDraw)
+          break;
       default:
         json_data.lines.forEach(coords => {
               auxLineToDraw.push(invertirCoordenadas(coords))
