@@ -7,9 +7,10 @@ export function useFetch(urls) {
       const fetchData = async () => {
         try {
             const responses = await Promise.all(
-                urls.map(url => fetch(url).then(response => response.json()))
+                urls.map(url => fetch(url, {mode:'no-cors'}).then(response => response.json()))
             );
-            const unifiedData = responses.flatMap(response => response.features);
+          //const unifiedData = responses.flatMap(response => response.features);
+          const unifiedData = responses.flatMap(response => response.result);
 
             setData(unifiedData);
         } catch (error) {

@@ -1,5 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import tensorflow as tf
+#from tensorflow.keras.models import load_model
+#from sklearn.preprocessing import StandardScaler
+#import joblib
 import pickle
 import datetime
 import pandas as pd
@@ -9,7 +13,10 @@ CORS(app)
 
 # Cargar el modelo de árboles de decisión desde el archivo pickle
 with open("python/ML/models/2024-02-26_151721-decisionTree.pkl", 'rb') as file:
-    modelo_arboles_decision = pickle.load(file)
+    model = pickle.load(file)
+
+#model = load_model('python/ML/models/2024-02-23_081116-cnns.keras')
+#scaler=joblib.load('python/ML/models/scaler.joblib')
 
 @app.route('/predict', methods=['POST'])
 def predecir_estado_trafico():
@@ -61,9 +68,12 @@ def predecir_estado_trafico():
             dateTimeSplit(df)
         
             X_pred_nuevo = df[["year", "month", "day", "hour", "minute", "weekDay", "idTram"]]
+            #X_pred_nuevo = scaler.transform(X_pred_nuevo)
+            #X_pred_nuevo = X_pred_nuevo.reshape((X_pred_nuevo.shape[0],X_pred_nuevo[1],1))
+    
             
-            # Realizar la predicción con el modelo de árboles de decisión
-            prediction = modelo_arboles_decision.predict(X_pred_nuevo)
+            # Realizar la predicción con el modelo 
+            prediction = model.predict(X_pred_nuevo)
             new_data.append ({
                 "id": id_tramo,
                 "address": address,

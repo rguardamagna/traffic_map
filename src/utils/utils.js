@@ -115,7 +115,7 @@ export async function classifyPrediction(json_data,fluido,denso,congestionado,co
           json_data.lines.forEach(coords => {
               auxLineToDraw.push(invertirCoordenadas(coords))
           });                
-          congestionado.push(auxLineToDraw)
+          denso.push(auxLineToDraw)
           break;           
       case 5:
           json_data.lines.forEach(coords => {
