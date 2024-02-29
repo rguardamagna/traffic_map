@@ -22,6 +22,7 @@ const MapView = () => {
     const [predictionSinDatos, setPredictionSinDatos] = useState([]);
 
     const polyline = usePolylineCreator();
+    console.log(polyline)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -74,11 +75,11 @@ const MapView = () => {
     const blackOptions = { color: 'black' }
     const grayOptions = { color: 'gray' }
     
-    //<MapContainer center={[39.46746287691412,-0.3778836267835896]} zoom={13} className="mapa">
+    //<MapContainer center={[41.396424808239, 2.1568495062334496]} zoom={13} className="mapa">
     
     return (
         <div>
-            <MapContainer center={[41.396424808239, 2.1568495062334496]} zoom={13} className="mapa">
+            <MapContainer center={[39.46746287691412,-0.3778836267835896]} zoom={13} className="mapa">
                 <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                 <LayersControl position="topright">
                     <LayersControl.Overlay checked name="Estado actual del tráfico">

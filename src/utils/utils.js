@@ -23,6 +23,20 @@ export async function realizarPrediccion(trafficData) {
   }
 }
 
+export async function obtenerDatosBcn() {
+    try {
+      const apiUrl = 'http://127.0.0.1:5000/datos';
+      const response = await axios.get(apiUrl);
+      if (response.status === 200 && response.data.length !== 0) { 
+        return response.data;
+      }
+          
+    } catch (error) {
+      console.error('Error al realizar la solicitud:', error.message);
+      throw error;
+    }
+  }
+
 
 // Clasificar datos (trafico actual y predicciones)
 
